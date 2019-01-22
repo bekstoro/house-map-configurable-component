@@ -19,10 +19,6 @@ const styles = theme => ({
     maxWidth: 840,
     margin: 'auto'
   },
-  media: {
-    height: 0,
-    paddingTop: '50%'
-  },
   actions: {
     display: 'flex',
   },
@@ -30,6 +26,22 @@ const styles = theme => ({
     transform: 'rotate(180deg)',
   }
 })
+
+const templateStrategy = [
+  {
+    filter: (templateName) => templateName === 'ADDRESS',
+    render: (item, field) => (<AddressComponent address={item[field]} rating={item.rating}/>)
+  }, {
+    filter: (templateName) => templateName === 'IMAGE',
+    render: (item, field) => (<ImageComponent image={item[field][0]}/>)
+  }, {
+    filter: (templateName) => templateName === 'PRICE',
+    render: (item, field) => (<PriceComponent price={item[field]}/>)
+  }, {
+    filter: (templateName) => templateName === 'AREA',
+    render: (item, field) => (<AreaComponent area={item[field]}/>)
+  }
+]
 
 class Item extends React.Component {
   state = { expanded: false }
@@ -39,21 +51,29 @@ class Item extends React.Component {
   }
 
   render() {
-    const { classes, item } = this.props
-    const { area, description, full_address, images, price, rating } = item
+    const { classes, item, template } = this.props
+    const { description } = item
+    if (!template || template.length === 0) {
+      return null
+    }
 
     return (
       <div>
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Card className={classes.card}>
-              <AddressComponent address={full_address}
-                                rating={rating}/>
-              <ImageComponent className={classes.media}
-                              image={images[0]}/>
-              <PriceComponent price={price}/>
-              <AreaComponent area={area}/>
-
+              {
+                template.map(({ component, field }, index) => {
+                  const templateStrategyItem = templateStrategy.find(it => it.filter(component))
+                  return (
+                    <React.Fragment key={index}>
+                      {
+                        templateStrategyItem && templateStrategyItem.render(item, field)
+                      }
+                    </React.Fragment>
+                  )
+                })
+              }
               <IconButton
                 className={classNames({
                   [classes.expandOpen]: this.state.expanded,
@@ -81,6 +101,7 @@ class Item extends React.Component {
 Item.propTypes = {
   classes: PropTypes.object.isRequired,
   item: PropTypes.object.isRequired,
+  template: PropTypes.array
 }
 
 export default withStyles(styles)(Item)

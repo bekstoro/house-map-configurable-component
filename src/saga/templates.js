@@ -10,7 +10,7 @@ function* getTemplatesSaga() {
 function* getTemplatesRequest() {
   try {
     const response = yield call(Service.getTemplates)
-    yield put(getTemplatesSuccess(response.data))
+    yield put(getTemplatesSuccess(response.data && response.data.map(({template}) => template)))
   } catch (err) {
     yield put(getTemplatesError(err))
   } finally {

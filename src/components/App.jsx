@@ -19,7 +19,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { classes, properties } = this.props
+    const { classes, properties, templates } = this.props
+    if (templates.length === 0 && properties.length === 0) {
+      return null
+    }
 
     return (
       <div className={classes.root}>
@@ -31,7 +34,9 @@ class App extends React.Component {
           </Toolbar>
         </AppBar>
         {
-          properties.map((item, index) => <ItemComponent key={index} item={item}/>)
+          properties.map((item, index) => <ItemComponent key={index}
+                                                         item={item}
+                                                         template={templates[(index + 3) % 3]}/>)
         }
       </div>
     )
