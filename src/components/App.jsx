@@ -1,8 +1,16 @@
 import React from 'react'
-import AddressComponent from './Address'
-import AreaComponent from './Area'
-import ImageComponent from './Image'
-import PriceComponent from './Price'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import ItemComponent from './Item'
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  }
+})
 
 class App extends React.Component {
   componentDidMount() {
@@ -11,15 +19,31 @@ class App extends React.Component {
   }
 
   render() {
+    const { classes, properties } = this.props
+
     return (
-      <div>
-        <AddressComponent/>
-        <AreaComponent/>
-        <ImageComponent/>
-        <PriceComponent/>
+      <div className={classes.root}>
+        <AppBar position='static' className={'mb3'}>
+          <Toolbar>
+            <Typography variant='h6' color='inherit'>
+              House feed
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        {
+          properties.map((item, index) => <ItemComponent key={index} item={item}/>)
+        }
       </div>
     )
   }
 }
 
-export default App
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+  getProperties: PropTypes.func.isRequired,
+  getTemplates: PropTypes.func.isRequired,
+  properties: PropTypes.array.isRequired,
+  templates: PropTypes.array.isRequired
+}
+
+export default withStyles(styles)(App)
