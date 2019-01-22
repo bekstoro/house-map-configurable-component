@@ -1,0 +1,1 @@
+# house-map-configurable-component
