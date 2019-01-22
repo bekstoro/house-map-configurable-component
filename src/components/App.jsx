@@ -4,13 +4,22 @@ import AreaComponent from './Area'
 import ImageComponent from './Image'
 import PriceComponent from './Price'
 
-const App = () => (
-  <div>
-    <AddressComponent/>
-    <AreaComponent/>
-    <ImageComponent/>
-    <PriceComponent/>
-  </div>
-)
+class App extends React.Component {
+  componentDidMount() {
+    this.props.getProperties()
+    this.props.getTemplates()
+  }
+
+  render() {
+    return (
+      <div>
+        <AddressComponent/>
+        <AreaComponent/>
+        <ImageComponent/>
+        <PriceComponent/>
+      </div>
+    )
+  }
+}
 
 export default App
